@@ -1,55 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { fetchDailyData } from '../../api';
 import { Line, Bar } from 'react-chartjs-2';
+import { Chart as ChartJS } from 'chart.js/auto'
 import styles from './Chart.module.css';
-import chart from 'chart.js/auto'
 
 
-const Chart = ({ data: { confirmed, deaths, recovered }, country }) => {
-    const [dailyData, setDailyData] = useState({});
-
-    useEffect(() => {
-        const fetchAPI = async () => {
-            setDailyData(await fetchDailyData());
-        }
-
-        // console.log(dailyData)
-
-        fetchAPI();
-    }, []);
-
-    const lineChart = (
-        dailyData[0]
-        ? (
-            
-        <Line 
-            data={{
-                labels: dailyData.map(({ date }) => date),
-                datasets: [{
-                    data: dailyData.map(({ confirmed }) => confirmed),
-                    label: 'Infected',
-                    borderColor: "#3333ff",
-                    fill: true,
-                }, {
-                    data: dailyData.map(({ deaths }) => deaths),
-                    label: 'Deaths',
-                    borderColor: 'red',
-                    backgroundColor: 'rgba(255, 0, 0, 0.5)',
-                    fill: true,
-                }],
-            }}
-        />) : null
-        
-    );
-
-    console.log(confirmed, recovered, deaths);
+const Chart = ({ data: { todayCases, todayDeaths, todayRecovered }, country }) => {
+    const [dailyData, setDailyData] = useState([]);
 
     const barChart = (
-        confirmed
+        todayCases
         ? (
             <Bar 
                 data = {{
-                    labels: ['Infected', 'Recovered', 'Deaths'],
+                    labels: ["Cases Today", "Recoveries Today", 'Deaths Today'],
                     datasets: [{
                         label: 'People',
                         backgroundColor: [
@@ -57,7 +21,7 @@ const Chart = ({ data: { confirmed, deaths, recovered }, country }) => {
                             'rgba(0, 255, 0, 0.5)',
                             'rgba(255, 0, 0, 0.5)'
                         ],
-                        data: [confirmed.value, recovered.value, deaths.value] 
+                        data: [todayCases, todayRecovered, todayDeaths] 
                     }]
                 }}
                 options = {{
@@ -71,7 +35,7 @@ const Chart = ({ data: { confirmed, deaths, recovered }, country }) => {
 
     return (
         <div className={styles.container}>
-            {country ? barChart : lineChart}
+            {barChart}
         </div>
     )
 }

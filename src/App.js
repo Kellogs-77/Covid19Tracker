@@ -1,5 +1,4 @@
 import React from "react";
-
 import { Cards, Chart, CountryPicker } from "./components";
 import styles from "./App.module.css";
 import { fetchData } from "./api";
@@ -12,13 +11,15 @@ class App extends React.Component {
 
     async componentDidMount() {
         const fetchedData = await fetchData();
-
+        console.log(fetchedData);
         this.setState({ data: fetchedData });
     }
 
     handleCountryChange = async (country) => {
+        console.log(country);
+        console.log("getting data for a country change...");
         const fetchedData = await fetchData(country);
-
+        console.log(fetchedData);
         this.setState({ data: fetchedData, country: country });
         // fetch the data
         // set the state
